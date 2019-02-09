@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Mi primer juego</title>
+	<script type="text/javascript" src="phaser.min.js">
+	
+	</script>
+
+	<style>
+	
+	#idp{
+		position: absolute;
+		top: 2%;
+		left: 4%;
+		font-size: 20px;
+		color: rgb(221, 0, 0);
+		z-index: 12;
+	}
+	
+	</style>
+</head>
+<body><p  id="idp" >aaaaaaaaaaaaaaaa</p>
+
+	<script type="text/javascript">
+
+
+
+function pes(st){
+
+	document.getElementById("idp").innerHTML=st.x+"  "+st.y;
+}
+
+        var vw=window.innerWidth;
+		var vh=window.innerHeight;
+        var player;
+		var playermover;  
+
+		var cursors 
+		var arrapuas=[];
+
+		var game = new Phaser.Game(vw, vh, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+		function preload() {
+
+			game.load.image('mover', 'robc10001.png',);
+		
+			game.load.image('gameboy', 'ca.png',);
+				game.load.image('puas', 'puas.png',);
+			game.load.spritesheet('lluvia', 'lluvia.png', 802, 592);
+		}
+		
+		var prite;
+		var sprite2;
+		var arraysprites=[];
+
+var player;
+
+var mundox=0;
+var mundoy=0;
+var facing = 'left';
+
+var tween;
+var bounces = 10;
+
+var lluvia
+	var	jumpButton
+
+
+
+
+		function create() {
+			game.world.setBounds(0, 0, vw*2, vh*2);
+			game.physics.startSystem(Phaser.Physics.ARCADE);
+		
+			game.stage.backgroundColor = '#000000';
+			game.physics.arcade.gravity.set(0,100);
+			//	Here we're tweening the scale of the sprite, which translates to the scale of the Body as well.
+			//	The collision will carry on working even against the scaled body.
+		
+		/*	player = game.add.sprite(200, 200, 'gameboy', 2);
+			player .anchor.set(0.5);
+			player .smoothed = false;
+			game.physics.enable(player, Phaser.Physics.ARCADE);
+			game.world.setBounds(0, 0,vw*2, vh*2);
+			coli({sprite: game.add.sprite(vw/2,vh/2, 'gameboy')});
+*/
+
+		mundox=game.world.centerX;
+	 console.log(game.world.centerX*1+"  "+vw);
+
+/*
+	 arraysprites.push({sprite: game.add.sprite(game.world.centerx*2-game.world.centerx*0.9,game.world.centerY*2-game.world.centerY*0.1, 'gameboy')});
+
+arraysprites[arraysprites.length-1].sprite.anchor.set(0.5,0.5);
+
+arraysprites[arraysprites.length-1].sprite.scale.set(vh*0.004,vh*0.0015);
+arraysprites[arraysprites.length-1].sprite.x=arraysprites[arraysprites.length-1].sprite.x+
+(0.5*arraysprites[arraysprites.length-1].sprite.width);
+
+
+arraysprites[arraysprites.length-1].sprite.anchor.set(0.5,0.5);
+	game.physics.enable(arraysprites[arraysprites.length-1].sprite, Phaser.Physics.ARCADE);
+	arraysprites[arraysprites.length-1].sprite.body.immovable = true;
+
+
+
+	arraysprites[arraysprites.length-1].sprite.body.allowGravity=false;
+
+*/
+
+creaplataforma( game.add.sprite(game.world.centerx*2-game.world.centerx*0.9,
+game.world.centerY*2-game.world.centerY*0.1, 'gameboy'),0.004,0.0015);
+
+creaplataforma( game.add.sprite(arraysprites[arraysprites.length-1].sprite.x+200,
+
+game.world.centerY*2-game.world.centerY*0.1, 'gameboy'),0.004,0.0007);
+
+
+
+
+crarpuas( game.add.sprite(game.world.centerX-game.world.centerX*0.7,
+game.world.centerY*2-game.world.centerY*0.23, 'puas'),0.004,0.004);
+
+
+lluvia = game.add.sprite(vw/2, vh/2+vh/2*0.3, 'lluvia');
+lluvia.animations.add('izquierda',[0, 1, 2, 3,4,5,6,7,8,9], 20, true);
+lluvia.anchor.set(0.5);
+lluvia.scale.set(vw/lluvia.width,vh/lluvia.height*1.5);
+lluvia.fixedToCamera=true;
+
+
+
+lluvia.animations.play('izquierda');
+tween = game.add.tween(arrapuas[arrapuas.length-1].sprite).
+to( { x: 300 }, 5000, Phaser.Easing.Bounce.Out, true, 2500, bounces);
+
+//game.world.height - arrapuas[arrapuas.length-1].sprite.height
+//	There is a 2.5 second delay at the start, then it calls this function
+//tween.onStart.add(onStart, this);
+
+//	This tween will repeat 10 times, calling this function every time it loops
+//tween.onRepeat.add(onLoop, this);
+
+//	When it completes it will call this function
+//tween.onComplete.add(onComplete, this);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*		game.add.tween(arraysprites[arraysprites.length-1].sprite.scale).to( { x: 6, y: 1},
+			 233, Phaser.Easing.Linear.None, true, 0, 1000, true);*/
+
+playermover = game.add.sprite(game.world.centerx*2-game.world.centerx*0.9, game.world.centerY*2-game.world.centerY*0.4, 'mover');
+
+
+
+playermover.inputEnabled = true;
+playermover.input.enableDrag();
+
+
+game.physics.enable(playermover, Phaser.Physics.ARCADE);
+
+playermover.body.allowGravity=false;
+cursors = game.input.keyboard.createCursorKeys();
+
+
+
+
+playermover.scale.set(vh*0.0015);
+
+
+
+cursors = game.input.keyboard.createCursorKeys();
+
+game.camera.follow(playermover);
+
+jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+
+control(playermover);
+
+
+
+
+		
+		}
+		var escolicionsuelo=false;
+		
+		function update() {control(playermover);
+
+		pes(playermover);
+		for(var i in arraysprites){
+			game.physics.arcade.collide(arraysprites[i].sprite, playermover,coli);
+		}
+	
+		for(var i in arrapuas){
+			game.physics.arcade.collide(arrapuas[i].sprite, playermover,coli);
+		}
+	
+		
+	arrapuas[i].sprite.body.angularVelocity=70;
+	
+
+
+
+
+	//	game.physics.arcade.collide(arraysprites[arraysprites.length-1].sprite, playermover,coli);
+		
+		}
+		
+		function render() {
+		
+			// game.debug.body(sprite);
+			// game.debug.body(sprite2);
+		
+		}
+		
+		function coli(obj){
+			
+
+	
+
+
+		}
+
+
+		function control(sprite) {
+			
+		    game.camera.follow(sprite);
+        
+        // game.physics.arcade.collide(sprite, layer);
+    
+        sprite.body.velocity.x = 0;
+        sprite.body.velocity.y= 0;
+    
+        if (cursors.up.isDown)
+        {
+            sprite.body.velocity.y = -150;
+    
+            if (facing != 'left')
+            {
+                sprite.animations.play('left');
+                facing = 'left';
+            }
+        }
+        else if (cursors.down.isDown)
+        {
+            sprite.body.velocity.y = 150;
+    
+            if (facing != 'right')
+            {
+            //  sprite.animations.play('right');
+            //  facing = 'right';
+            }
+        }
+        else if (cursors.left.isDown)
+        {
+            sprite.body.velocity.x = -150;
+    
+            if (facing != 'right')
+            {
+            //  sprite.animations.play('right');
+            //  facing = 'right';
+            }
+        }
+        else if (cursors.right.isDown)
+        {
+            sprite.body.velocity.x = 150;
+    
+            if (facing != 'right')
+            {
+        //      sprite.animations.play('right');
+    //          facing = 'right';
+            }
+        }
+
+        else
+        {
+            if (facing != 'idle')
+            {
+                sprite.animations.stop();
+    
+                if (facing == 'left')
+                {
+                    sprite.frame = 0;
+                }
+                else
+                {
+                    sprite.frame = 5;
+                }
+    
+                facing = 'idle';
+            }
+        }
+        
+        if (jumpButton.isDown && sprite.body.onFloor() && game.time.now > jumpTimer)
+        {
+            sprite.body.velocity.y = -250;
+            jumpTimer = game.time.now + 750;
+        }
+
+}
+
+
+
+
+function creaplataforma(sp,scx,scy){
+
+
+	arraysprites.push({sprite:sp});
+
+arraysprites[arraysprites.length-1].sprite.anchor.set(0.5,0.5);
+
+arraysprites[arraysprites.length-1].sprite.scale.set(vh*scx,vh*scy);
+arraysprites[arraysprites.length-1].sprite.x=arraysprites[arraysprites.length-1].sprite.x+
+(0.5*arraysprites[arraysprites.length-1].sprite.width);
+
+
+arraysprites[arraysprites.length-1].sprite.anchor.set(0.5,0.5);
+	game.physics.enable(arraysprites[arraysprites.length-1].sprite, Phaser.Physics.ARCADE);
+	arraysprites[arraysprites.length-1].sprite.body.immovable = true;
+
+
+
+	arraysprites[arraysprites.length-1].sprite.body.allowGravity=false;
+
+
+
+
+}
+
+
+function crarpuas(sp,scx,scy){
+	
+    arrapuas.push({sprite:sp});
+
+arrapuas[arrapuas.length-1].sprite.anchor.set(0.5,0.5);
+
+arrapuas[arrapuas.length-1].sprite.scale.set(vh*scx,vh*scy);
+arrapuas[arrapuas.length-1].sprite.x=arrapuas[arrapuas.length-1].sprite.x+
+(0.5*arrapuas[arrapuas.length-1].sprite.width);
+
+
+arrapuas[arrapuas.length-1].sprite.anchor.set(0.5,0.5);
+    game.physics.enable(arrapuas[arrapuas.length-1].sprite, Phaser.Physics.ARCADE);
+    arrapuas[arrapuas.length-1].sprite.body.immovable = false;
+
+
+	//arrapuas[arrapuas.length-1].sprite.body.mass=66;
+    arrapuas[arrapuas.length-1].sprite.body.allowGravity=false;
+
+
+}
+
+
+	</script>
+
+</body>
+</html>
